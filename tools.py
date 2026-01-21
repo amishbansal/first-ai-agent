@@ -19,6 +19,7 @@ def get_weather(city: str) -> str:
         f"?q={city}&appid={OPENWEATHER_API_KEY}&units=metric"
     )
 
+    print("tool is called")
     response = requests.get(url)
     data = response.json()
 
@@ -29,6 +30,7 @@ def get_weather(city: str) -> str:
     description = data["weather"][0]["description"].lower()
 
     is_raining = "rain" in description or "drizzle" in description
+
 
     return (
         f"City: {city}\n"

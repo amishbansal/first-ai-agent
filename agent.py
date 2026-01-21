@@ -1,24 +1,26 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import create_agent
 from tools import get_weather
 
 model = ChatGoogleGenerativeAI(
-    model="gemini-3-flash-preview",
-    temperature=1.0,  # Gemini 3.0+ defaults to 1.0
-    max_tokens=None,
-    timeout=None,
-    max_retries=2,
-    # other params...
+    model="gemini-2.5-flash",
+    temperature=0.6
 )
 
 agent = create_agent(
-    model=model,
+    model = model,
     tools=[get_weather],
     system_prompt=(
-        "You are a helpful assistant. "
-        "Answer general everyday questions directly. "
-        "If a question depends on real weather conditions, "
-        "use the weather tool to get accurate information "
-        "before answering."
+        "You are a weather-aware assistant.\n"
+        "STRICT RULES:\n"
+        "1. If the user asks ANY question about weather, rain, temperature, umbrella, or forecast, "
+        "you MUST call the get_weather tool.\n"
+        "2. You are NOT allowed to answer weather questions from general knowledge.\n"
+        "3. If the city is NOT mentioned, ask the user to provide the city.\n"
+        "4. For non-weather questions (like greetings or general knowledge), answer directly."
+        "5. When prompt is related to weather, dont give it by yourself, get the data from get_weather tool and then reply accordingly"
     )
 )
